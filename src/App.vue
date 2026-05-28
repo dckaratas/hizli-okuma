@@ -8,8 +8,8 @@
           <span class="logo-hex">⬡</span>
           <span class="logo-text">hızlı<strong>okuma</strong></span>
         </div>
-        <nav hidden class="nav">
-          <span class="nav-tag">Falcon</span>
+        <nav class="nav">
+          <span class="nav-tag">Vue 3 + Vite</span>
         </nav>
       </div>
     </header>
@@ -43,7 +43,7 @@
         >
           <span class="tab-icon">←</span>
           <span>
-            <span class="tab-title">Ticker Modu</span>
+            <span class="tab-title">Ticker Modu ( Alpha )</span>
             <span class="tab-desc">Göz refleksi ve dikkat</span>
           </span>
         </button>
@@ -74,7 +74,7 @@
     </main>
 
     <footer class="footer">
-      <span>Falcon</span>
+      <span>Hızlı Okuma — Vue 3 + Vite Demo</span>
     </footer>
   </div>
 </template>

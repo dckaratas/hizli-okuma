@@ -54,11 +54,3 @@ hizli-okuma/
 ├── vite.config.js
 └── package.json
 ```
-
-## İlerleyen Aşamalar
-
-- Wikipedia Türkçe API entegrasyonu (dinamik paragraflar)
-- Kullanıcı istatistikleri (okunan kelime sayısı, oturum süresi)
-- Anlama soruları (paragraf sonunda quiz)
-- LocalStorage ile ilerleme kaydetme
-- Deploy: `npm run build` → Vercel veya Netlify'a yükle

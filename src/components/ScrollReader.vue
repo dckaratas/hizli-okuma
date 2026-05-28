@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 
 const props = defineProps({ paragraphs: Array, speed: Number, fontSize: Number })
 
@@ -53,13 +53,25 @@ const progress = computed(() => {
   return Math.min(100, Math.round((currentIdx.value / props.paragraphs.length) * 100))
 })
 
-function buildBlockSpeeds() {
-  if (!trackRef.value) return []
-  const blocks = trackRef.value.querySelectorAll('.para-block')
-  return Array.from(blocks).map((block, i) => {
-    const wordCount = props.paragraphs[i]?.text.split(' ').length ?? 50
-    const durationSec = wordCount / (props.speed / 60)
-    return block.offsetHeight / durationSec
+// DOM render + layout tamamlandıktan sonra ölç.
+// İç içe iki rAF ile mobil Safari dahil tüm tarayıcılarda
+// offsetHeight'ların kesinleşmesini garantiliyoruz.
+function measureBlockSpeeds() {
+  return new Promise(resolve => {
+    nextTick(() => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (!trackRef.value) return resolve([])
+          const blocks = trackRef.value.querySelectorAll('.para-block')
+          const speeds = Array.from(blocks).map((block, i) => {
+            const wordCount = props.paragraphs[i]?.text.split(' ').length ?? 50
+            const durationSec = wordCount / (props.speed / 60)
+            return block.offsetHeight / durationSec
+          })
+          resolve(speeds)
+        })
+      })
+    })
   })
 }
 
@@ -90,23 +102,44 @@ function animate(ts) {
   animFrame = requestAnimationFrame(animate)
 }
 
-function start() {
-  blockSpeeds = buildBlockSpeeds()
+async function start() {
+  blockSpeeds = await measureBlockSpeeds()
   isPlaying.value = true
   lastTime = null
   animFrame = requestAnimationFrame(animate)
 }
+
 function stop() {
   isPlaying.value = false
   if (animFrame) cancelAnimationFrame(animFrame)
   animFrame = null
 }
+
 function togglePlay() { isPlaying.value ? stop() : start() }
-function reset() { stop(); scrollY.value = 80; currentIdx.value = 0; blockSpeeds = [] }
+
+function reset() {
+  stop()
+  scrollY.value = 80
+  currentIdx.value = 0
+  blockSpeeds = []
+}
+
+// Ekran boyutu değişince (döndürme, pencere boyutlandırma) hızları yeniden ölç
+function onResize() {
+  if (blockSpeeds.length) {
+    measureBlockSpeeds().then(speeds => { blockSpeeds = speeds })
+  }
+}
 
 watch(() => props.paragraphs, reset)
-watch(() => [props.speed, props.fontSize], () => { if (blockSpeeds.length) blockSpeeds = buildBlockSpeeds() })
-onUnmounted(stop)
+watch(() => [props.speed, props.fontSize], () => {
+  if (blockSpeeds.length) {
+    measureBlockSpeeds().then(speeds => { blockSpeeds = speeds })
+  }
+})
+
+onMounted(() => window.addEventListener('resize', onResize))
+onUnmounted(() => { stop(); window.removeEventListener('resize', onResize) })
 </script>
 
 <style scoped>
