@@ -1,0 +1,101 @@
+/* Node.js sitesinden ilham alınan tasarım sistemi
+   Ana yeşil: #5fa04e (Node.js brand green)
+   Arka plan: #0f0f0f
+   Kart: #1a1a1a
+   Yazı: #f0f0f0
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Renkler */
+  --bg:            #0f0f0f;
+  --bg-secondary:  #161616;
+  --bg-card:       #1a1a1a;
+  --bg-card-hover: #1f1f1f;
+  --border:        #252525;
+  --border-light:  #2e2e2e;
+  --border-focus:  #5fa04e;
+
+  --text:          #f0f0f0;
+  --text-secondary:#888;
+  --text-dim:      #3a3a3a;
+
+  /* Node.js yeşili */
+  --accent:        #5fa04e;
+  --accent-light:  #6db35a;
+  --accent-bg:     rgba(95, 160, 78, 0.10);
+  --accent-bg2:    rgba(95, 160, 78, 0.18);
+
+  /* Tipografi */
+  --font:  'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  --mono:  'Geist Mono', 'Fira Code', monospace;
+
+  /* Köşe yarıçapları */
+  --r-sm:  6px;
+  --r-md:  10px;
+  --r-lg:  14px;
+  --r-xl:  18px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Range slider — Node.js yeşil thumb */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  background: var(--border-light);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg-card);
+  box-shadow: 0 0 0 2px var(--accent-bg2);
+  transition: box-shadow 0.15s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 4px var(--accent-bg2);
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 14px;
+  border: none;
+  background: none;
+  color: var(--text);
+}
